@@ -83,7 +83,7 @@ describe('Testando rotas do Server', () => {
 
     // testando o put
     it('Deve atualizar um filme existente com sucesso', async () => {
-        const updatedMovie = { title: 'Midnight in Paris' }
+        const updatedMovie = { title: 'Midnight in Paris', director: ' Woody Allen' }
         const response = await request(server).put('/movies/1').send(updatedMovie)
         expect(response.status).toBe(200)
         expect(response.body.title).toBe(updatedMovie.title)
@@ -95,7 +95,7 @@ describe('Testando rotas do Server', () => {
     })
 
     it('Deve retornar status 404 para atualização de filme inexistente', async () => {
-        const updatedMovie = { title: 'Midnight in Paris' }
+        const updatedMovie = { title: 'Midnight in Paris', director: ' Woody Allen' }
         const response = await request(server).put('/movies/999').send(updatedMovie)
         expect(response.status).toBe(404)
         expect(response.body.message).toBe('Filme não encontrado.')
@@ -122,10 +122,83 @@ describe('Testando rotas do Server', () => {
     })
 
     it('Deve retornar status 404 para atualização com mediaType inválido', async () => {
-        const updatedMedia = { title: 'Manifest: O Mistério do Voo 828' }
+        const updatedMedia = { title: 'Manifest: O Mistério do Voo 828', director: 'Jeff Rake', seasons: 5 }
         const response = await request(server).put('/séries/1').send(updatedMedia)
         expect(response.status).toBe(404)
         expect(response.body.message).toBe('Não foi possível alterar o conteúdo.')
+    })
+
+    // testando o patch
+    it('Deve atualizar parcialmente um filme existente com sucesso', async () => {
+        const updatedFields = { title: 'De Repente 30' }
+        const response = await request(server).patch('/movies/1').send(updatedFields)
+        expect(response.status).toBe(200)
+        expect(response.body.title).toBe(updatedFields.title)
+
+        const movieResponse = await request(server).get('/movies/1')
+        expect(movieResponse.status).toBe(200)
+        expect(movieResponse.body.title).toBe(updatedFields.title)
+    })
+
+    it('Deve retornar status 404 para atualização parcial de filme inexistente', async () => {
+        const updatedFields = { title: 'De Repente 30' }
+        const response = await request(server).patch('/movies/999').send(updatedFields)
+        expect(response.status).toBe(404)
+        expect(response.body.message).toBe('Filme não encontrado.')
+    })
+
+    it('Deve atualizar parcialmente uma série existente com sucesso', async () => {
+        const updatedFields = { title: 'Sex Education', seasons: 5 }
+        const response = await request(server).patch('/series/1').send(updatedFields)
+        expect(response.status).toBe(200)
+        expect(response.body.title).toBe(updatedFields.title)
+        expect(response.body.seasons).toBe(updatedFields.seasons)
+
+        const seriesResponse = await request(server).get('/series/1')
+        expect(seriesResponse.status).toBe(200)
+        expect(seriesResponse.body.title).toBe(updatedFields.title)
+        expect(seriesResponse.body.seasons).toBe(updatedFields.seasons)
+    })
+
+    it('Deve retornar status 404 para atualização parcial de série inexistente', async () => {
+        const updatedFields = { title: 'Sex Education', seasons: 5 }
+        const response = await request(server).patch('/series/999').send(updatedFields)
+        expect(response.status).toBe(404)
+        expect(response.body.message).toBe('Série não encontrado.')
+    })
+
+    it('Deve retornar status 404 para atualização parcial com mediaType inválido', async () => {
+        const updatedFields = { title: 'De repente 30' }
+        const response = await request(server).patch('/filmes/1').send(updatedFields)
+        expect(response.status).toBe(404)
+        expect(response.body.message).toBe('Não foi possível alterar o conteúdo.')
+    })
+
+    // testando o delete
+    it('Deve deletar um filme existente com sucesso', async () => {
+        const response = await request(server).delete('/movies/1')
+        expect(response.status).toBe(200)
+        expect(response.body.message).toBe('Mídia removida com sucesso.')
+
+        const movieResponse = await request(server).get('/movies/1')
+        expect(movieResponse.status).toBe(404)
+        expect(movieResponse.body.message).toBe('Conteúdo não encontrado.')
+    })
+
+    it('Deve deletar uma série existente com sucesso', async () => {
+        const response = await request(server).delete('/series/1')
+        expect(response.status).toBe(200)
+        expect(response.body.message).toBe('Mídia removida com sucesso.')
+
+        const seriesResponse = await request(server).get('/series/1')
+        expect(seriesResponse.status).toBe(404)
+        expect(seriesResponse.body.message).toBe('Conteúdo não encontrado.')
+    })
+
+    it('Deve retornar status 404 para deleção com mediaType inválido', async () => {
+        const response = await request(server).delete('/séries/1')
+        expect(response.status).toBe(404)
+        expect(response.body.message).toBe('Não foi possível deletar o conteúdo.')
     })
 
 })
