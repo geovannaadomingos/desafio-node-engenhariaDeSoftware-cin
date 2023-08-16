@@ -58,7 +58,7 @@ app.post('/:mediaType', (request, response) => {
     } else if (mediaType === 'series') {
         series.push(newMedia)
     } else {
-        response.status(400).json({ message: 'Não foi possível adicionar conteúdo.' })
+        response.status(404).json({ message: 'Não foi possível adicionar conteúdo.' })
         return
     }
 
@@ -81,7 +81,7 @@ app.put('/:mediaType/:id', (request, response) => {
         mediaList = series
         mediaNotFoundMessage = 'Série não encontrado.'
     } else {
-        response.status(400).json({ message: 'Não foi possível alterar o conteúdo.' })
+        response.status(404).json({ message: 'Não foi possível alterar o conteúdo.' })
         return
     }
 
@@ -109,7 +109,7 @@ app.patch('/:mediaType/:id', (request, response) => {
         mediaList = series
         mediaNotFoundMessage = 'Série não encontrado.'
     } else {
-        response.status(400).json({ message: 'Não foi possível alterar o conteúdo.' })
+        response.status(404).json({ message: 'Não foi possível alterar o conteúdo.' })
         return
     }
 
@@ -137,7 +137,7 @@ app.delete('/:mediaType/:id', (request, response) => {
         mediaList = series
         mediaNotFoundMessage = 'Série não encontrado.'
     } else {
-        response.status(400).json({ message: 'Não foi possível deletar o conteúdo.' })
+        response.status(404).json({ message: 'Não foi possível deletar o conteúdo.' })
         return
     }
 
