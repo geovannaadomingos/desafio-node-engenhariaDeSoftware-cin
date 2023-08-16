@@ -23,7 +23,7 @@ app.get('/:mediaType', (request, response) => {
     } else if (mediaType === 'series') {
         response.json(series)
     } else {
-        response.status(404).json({ message: 'Conteúdo não encontrada.' })
+        response.status(404).json({ message: 'Conteúdo não encontrado.' })
     }
 })
 
@@ -43,7 +43,7 @@ app.get('/:mediaType/:id', (request, response) => {
     if (media) {
         response.json(media)
     } else {
-        response.status(404).json({ message: 'Conteúdo não encontrada.' })
+        response.status(404).json({ message: 'Conteúdo não encontrado.' })
     }
 })
 
@@ -79,7 +79,7 @@ app.put('/:mediaType/:id', (request, response) => {
         mediaNotFoundMessage = 'Filme não encontrado.'
     } else if (mediaType === 'series') {
         mediaList = series
-        mediaNotFoundMessage = 'Série não encontrada.'
+        mediaNotFoundMessage = 'Série não encontrado.'
     } else {
         response.status(400).json({ message: 'Não foi possível alterar o conteúdo.' })
         return
@@ -107,7 +107,7 @@ app.patch('/:mediaType/:id', (request, response) => {
         mediaNotFoundMessage = 'Filme não encontrado.'
     } else if (mediaType === 'series') {
         mediaList = series
-        mediaNotFoundMessage = 'Série não encontrada.'
+        mediaNotFoundMessage = 'Série não encontrado.'
     } else {
         response.status(400).json({ message: 'Não foi possível alterar o conteúdo.' })
         return
@@ -135,7 +135,7 @@ app.delete('/:mediaType/:id', (request, response) => {
         mediaNotFoundMessage = 'Filme não encontrado.'
     } else if (mediaType === 'series') {
         mediaList = series
-        mediaNotFoundMessage = 'Série não encontrada.'
+        mediaNotFoundMessage = 'Série não encontrado.'
     } else {
         response.status(400).json({ message: 'Não foi possível deletar o conteúdo.' })
         return
@@ -152,6 +152,10 @@ app.delete('/:mediaType/:id', (request, response) => {
 
 
 const PORT = 3000
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`)
-})
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Servidor rodando na porta ${PORT}`)
+    })
+}
+
+module.exports = app
