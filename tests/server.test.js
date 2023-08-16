@@ -47,4 +47,36 @@ describe('Testando rotas do Server', () => {
         expect(response.status).toBe(404)
         expect(response.body.message).toBe('Conteúdo não encontrado.')
     })
+
+    it('Deve adicionar um novo filme', async () => {
+        const newMovie = { title: 'Midnight in Paris', director: ' Woody Allen' }
+        const response = await request(server).post('/movies').send(newMovie)
+        expect(response.status).toBe(201)
+        expect(response.body.title).toBe(newMovie.title)
+        expect(response.body.director).toBe(newMovie.director)
+
+        const movieResponse = await request(server).get(`/movies/${response.body.id}`)
+        expect(movieResponse.status).toBe(200)
+        expect(movieResponse.body).toEqual(response.body)
+    })
+
+    it('Deve adicionar uma nova série', async () => {
+        const newSeries = { title: 'Manifest: O Mistério do Voo 828', director: 'Jeff Rake', seasons: 4 }
+        const response = await request(server).post('/series').send(newSeries)
+        expect(response.status).toBe(201)
+        expect(response.body.title).toBe(newSeries.title)
+        expect(response.body.director).toBe(newSeries.director)
+        expect(response.body.seasons).toBe(newSeries.seasons)
+
+        const seriesResponse = await request(server).get(`/series/${response.body.id}`)
+        expect(seriesResponse.status).toBe(200)
+        expect(seriesResponse.body).toEqual(response.body)
+    })
+
+    it('Deve retornar status 404 para adição de conteúdo com mediaType inválido', async () => {
+        const response = await request(server).post('/série').send({ title: 'Manifest: O Mistério do Voo 828', director: 'Jeff Rake', seasons: 4 })
+        expect(response.status).toBe(404)
+        expect(response.body.message).toBe('Não foi possível adicionar conteúdo.')
+    })
+
 })
